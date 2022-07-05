@@ -311,7 +311,7 @@ def gameloop():
                 obs_x = random.randint(100,window_width/2)
                 obs_y = random.randint(100,window_height/2)
                 snake_length +=2
-                if score>20:
+                if score>200:
                    secondlevel(score)
             gameWindow.blit(field,(0,0))
             screen_text("Score: " + str(score), blue, 50, 10)
