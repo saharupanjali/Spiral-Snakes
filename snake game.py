@@ -27,6 +27,8 @@ snakes = pygame.image.load("snake image.jpg")
 cobra = pygame.image.load("snake_image.jpg")
 anaconda = pygame.image.load("snake pic.jpg")
 game_over = pygame.image.load("game over.jpg")
+gamefield = pygame.image.load("field.jpg")
+bgimg = pygame.image.load("background.jpg")
 #game_field = pygame.image.load("background.jpg")
 #Game Specific Variables
 clock = pygame.time.Clock()
@@ -188,14 +190,18 @@ def nextlevel(score):
                 obs_x = random.randint(100,window_width/2)
                 obs_y = random.randint(100,window_height/2)
                 snake_length +=5
+                if new_score > 1000:
+                    thirdlevel(new_score)
             gameWindow.fill(cream)
+            gameWindow.blit(bgimg,(0,0))
             screen_text("Score: " + str(new_score), blue, 50, 10)
             screen_text("Highest Score: " + new_highscore, blue, 500, 10)
             screen_text("Level:2", blue, 270, 10)
-            screen_text("Be careful from the red and blue squares", red, 150, 550)
+            warning("*Be careful from the red and blue squares", red, 50, 550)
+            screen_text("Score above 1000 to reach the final level", red, 150, 500)
             #if score > int(highscore) :
                 #highscore = score
-            if abs(food_x - obstacle1_x)>20 and abs(food_y-obstacle1_y)>20 or abs(food_x-obstacle2_x)>20 and abs(food_y-obstacle2_y)>20 or abs(food_x - obstacle3_x)>20 and abs(food_y-obstacle3_y)>20 or abs(food_x-obstacle4_x)>20 and abs(food_y-obstacle4_y)>20:
+            if abs(food_x - obstacle1_x)>25 and abs(food_y-obstacle1_y)>25 or abs(food_x-obstacle2_x)>25 and abs(food_y-obstacle2_y)>25 or abs(food_x - obstacle3_x)>25 and abs(food_y-obstacle3_y)>25 or abs(food_x-obstacle4_x)>25 and abs(food_y-obstacle4_y)>25:
                 pygame.draw.rect(gameWindow,golden,[food_x,food_y,food_size,food_size])
             if abs(obs_x - food_x)>12 and abs(obs_y - food_y)>12 or obs_x != obstacle1_x and obs_y != obstacle1_y or obs_x != obstacle2_x and obs_y != obstacle2_y or obs_x != obstacle3_x and obs_y != obstacle3_y or obs_x != obstacle4_x and obs_y != obstacle4_y:
                 pygame.draw.rect(gameWindow,red,[obs_x,obs_y,obs_size,obs_size])
@@ -236,6 +242,176 @@ def nextlevel(score):
             pygame.draw.rect(gameWindow,blue,[obstacle2_x,obstacle2_y,obstacle_size,obstacle_size])
             pygame.draw.rect(gameWindow,blue,[obstacle3_x,obstacle3_y,obstacle_size,obstacle_size])
             pygame.draw.rect(gameWindow,blue,[obstacle4_x,obstacle4_y,obstacle_size,obstacle_size])
+        pygame.display.update()
+        clock.tick(fps)
+    pygame.quit()
+    quit()
+def thirdlevel(new_score):
+    exit_game = False
+    while exit_game != True:
+        gameWindow.fill(black)
+        gameWindow.blit(anaconda,(0,-20))
+        black_font("Now Press The Right Key To Play",black,190,5)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+               exit_game = True
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    pygame.mixer.music.load('Game.mp3')
+                    pygame.mixer.music.play(-1)
+                    finallevel(new_score)
+        pygame.display.update()
+        clock.tick(60)
+def finallevel(new_score):
+    exit_game = False
+    snake_x = 440
+    snake_y = 0
+    snake_size = 12
+    #body_parts = 3
+    food_1_x = random.randint(30,window_width/2)
+    food_1_y = random.randint(30,window_height/2)
+    food_2_x = random.randint(50,window_width/2)
+    food_2_y = random.randint(50,window_height/2)
+    obs1_x = random.randint(50,window_width/2)
+    obs1_y = random.randint(50,window_height/2)
+    obs2_x = random.randint(250,window_width)
+    obs2_y = random.randint(250,window_height)
+    obs_size = 40
+    obstacle1_x = 480
+    obstacle1_y = 450
+    obstacle2_x = 80
+    obstacle2_y = 50
+    obstacle3_x = 80
+    obstacle3_y = 450
+    obstacle4_x = 480
+    obstacle4_y = 50
+    obstacle_size = 25
+    #food_radius = 4
+    fps = 40
+    velocity_x = 0
+    velocity_y = 6
+    init_velocity = 6
+    final_score = int(new_score)
+    food_1_size = 8
+    snake_list = []
+    snake_length = 3
+    game_over = False
+    with open("highscore.txt", "r") as f:
+        final_highscore = f.read()
+#Game Loop
+    while exit_game !=True:
+        if game_over == True:
+            with open("highscore.txt", "w") as f:
+             f.write(str(final_highscore))
+            gameWindow.fill(black)
+            #gameWindow.blit(game_over,(0,0))
+            game_score("Press Enter To Play Again", red, 100, 300)
+            game_score("Final Score: "+str(final_score),red,50,50)
+            if final_score>int(final_highscore):
+                game_score("Congratulations for the highest score!", red, 150, 350)
+                final_highscore = final_score
+            game_score("Highest Score: "+str(final_highscore),red,450,50)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit_game = True
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:
+                        welcome()
+            if new_score<1250:
+                game_score("Masterstroke!", red, 200, 270)
+            else:
+                game_score("Incredible!", red, 200, 350)
+        else:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit_game = True
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RIGHT:
+                        velocity_x = init_velocity
+                        velocity_y = 0
+                    if event.key == pygame.K_DOWN:
+                        velocity_y = init_velocity
+                        velocity_x = 0
+                    if event.key == pygame.K_UP:
+                        velocity_y = -init_velocity
+                        velocity_x = 0
+                    if event.key == pygame.K_LEFT:
+                        velocity_x = -init_velocity
+                        velocity_y = 0
+            snake_x +=velocity_x
+            snake_y +=velocity_y
+            if abs(snake_x - food_1_x)<5 and abs(snake_y - food_1_y)<5:
+                final_score +=5
+                food_1_x = random.randint(30,window_width/2)
+                food_1_y = random.randint(30,window_height/2)
+                obs1_x = random.randint(100,window_width/2)
+                obs1_y = random.randint(100,window_height/2)
+                snake_length +=5
+            if abs(snake_x - food_2_x)<7 and abs(snake_y - food_2_y)<7:
+                final_score +=10
+                food_2_x = random.randint(50,window_width/2)
+                food_2_y = random.randint(50,window_height/2)
+                obs2_x = random.randint(250,window_width)
+                obs2_y = random.randint(250,window_height)
+                snake_length +=7
+            gameWindow.fill(cream)
+            gameWindow.blit(gamefield,(0,0))
+            screen_text("Score: " + str(final_score), blue, 50, 10)
+            screen_text("Highest Score: " + final_highscore, blue, 500, 10)
+            screen_text("Level:2", blue, 270, 10)
+            warning("Be careful from the squares!", red, 150, 550)
+            #if score > int(highscore) :
+                #highscore = score
+            if abs(food_1_x - obstacle1_x)>20 and abs(food_1_y-obstacle1_y)>20 or abs(food_1_x-obstacle2_x)>20 and abs(food_1_y-obstacle2_y)>20 or abs(food_1_x - obstacle3_x)>20 and abs(food_1_y-obstacle3_y)>20 or abs(food_1_x-obstacle4_x)>20 and abs(food_1_y-obstacle4_y)>20 or food_1_x!=food_2_x and food_1_y!=food_2_y:
+                pygame.draw.rect(gameWindow,white,[food_1_x,food_1_y,food_1_size,food_1_size])
+            if abs(food_2_x - obstacle1_x)>20 and abs(food_2_y-obstacle1_y)>20 or abs(food_2_x-obstacle2_x)>20 and abs(food_2_y-obstacle2_y)>20 or abs(food_2_x - obstacle3_x)>20 and abs(food_2_y-obstacle3_y)>20 or abs(food_2_x-obstacle4_x)>20 and abs(food_2_y-obstacle4_y)>20 or food_2_x!= food_1_x and food_2_y!=food_1_y:
+                pygame.draw.circle(gameWindow,black,(food_2_x,food_2_y),10)
+            if abs(obs1_x - food_1_x)>12 and abs(obs1_y - food_1_y)>12 or obs1_x!=obs2_x and obs1_y!=obs2_y or obs1_x != obstacle1_x and obs1_y != obstacle1_y or obs1_x != obstacle2_x and obs1_y != obstacle2_y or obs1_x != obstacle3_x and obs1_y != obstacle3_y or obs1_x != obstacle4_x and obs1_y != obstacle4_y:
+                pygame.draw.rect(gameWindow,cream,[obs1_x,obs1_y,obs_size,obs_size])
+            if abs(obs2_x - food_1_x)>12 and abs(obs2_y - food_1_y)>12 or obs2_x!=obs1_x and obs2_y!=obs1_y or obs2_x != obstacle1_x and obs2_y != obstacle1_y or obs2_x != obstacle2_x and obs2_y != obstacle2_y or obs2_x != obstacle3_x and obs2_y != obstacle3_y or obs2_x != obstacle4_x and obs2_y != obstacle4_y:
+                pygame.draw.rect(gameWindow,cream,[obs2_x,obs2_y,obs_size,obs_size])
+            #pygame.draw.line(gameWindow, black, (obs_x,0),(obs_x,obs_y),10)
+            head = []
+            head.append(snake_x)
+            head.append(snake_y)
+            snake_list.append(head)
+            if len(snake_list) > snake_length:
+                del snake_list[0]
+            if head in snake_list[:-1]:
+                warning("Crashed! Game Over",red,250,200)
+                game_over = True
+                pygame.mixer.music.load('collision.wav')
+                pygame.mixer.music.play()
+            if abs(snake_x - obs1_x)<15 and abs(snake_y - obs1_y)<15 or abs(snake_x - obstacle1_x)<20 and abs(snake_y - obstacle1_y)<20 :
+                warning("Oh no! Crashed! Game Over",red,250,200)
+                game_over = True
+                pygame.mixer.music.load('collision.wav')
+                pygame.mixer.music.play()
+            if abs(snake_x - obs2_x)<15 and abs(snake_y-obs2_y)<15:
+                warning("Oh no! Crashed! Game Over",red,250,200)
+                game_over = True
+                pygame.mixer.music.load('collision.wav')
+                pygame.mixer.music.play()
+            if abs(snake_x - obstacle2_x)<20 and abs(snake_y - obstacle2_y)<20 or abs(snake_x - obstacle3_x)<20 and abs(snake_y - obstacle3_y)<20:
+                warning("Oh no! Crashed! Game Over",red,250,200)
+                game_over = True
+                pygame.mixer.music.load('collision.wav')
+                pygame.mixer.music.play()
+            if abs(snake_x - obstacle4_x)<20 and abs(snake_y - obstacle4_y)<20: 
+                warning("Oh no! Crashed! Game Over",red,250,200)
+                game_over = True
+                pygame.mixer.music.load('collision.wav')
+                pygame.mixer.music.play()
+            if snake_x<0 or snake_x>window_width or snake_y<0 or snake_y>window_height:
+                warning("Crashed! Game Over",red,250,200)
+                game_over = True
+                pygame.mixer.music.load('collision.wav')
+                pygame.mixer.music.play()
+            plot_snake(gameWindow, snake, snake_list, snake_size)
+            pygame.draw.rect(gameWindow,golden,[obstacle1_x,obstacle1_y,obstacle_size,obstacle_size])
+            pygame.draw.rect(gameWindow,golden,[obstacle2_x,obstacle2_y,obstacle_size,obstacle_size])
+            pygame.draw.rect(gameWindow,golden,[obstacle3_x,obstacle3_y,obstacle_size,obstacle_size])
+            pygame.draw.rect(gameWindow,golden,[obstacle4_x,obstacle4_y,obstacle_size,obstacle_size])
         pygame.display.update()
         clock.tick(fps)
     pygame.quit()
@@ -311,14 +487,14 @@ def gameloop():
                 obs_x = random.randint(100,window_width/2)
                 obs_y = random.randint(100,window_height/2)
                 snake_length +=2
-                if score>200:
+                if score>300:
                    secondlevel(score)
             gameWindow.blit(field,(0,0))
             screen_text("Score: " + str(score), blue, 50, 10)
             screen_text("Highest Score: " + highscore, blue, 500, 10)
             screen_text("Level:1", blue, 270, 10)
-            screen_text("*Avoid the silver box to be safe.", blue, 150, 500)
-            screen_text("Score above 200 to reach the next level", blue, 150, 550)
+            warning("*Avoid the silver box to be safe.", blue, 150, 500)
+            screen_text("Score above 300 to reach the next level", blue, 150, 550)
             #if score > int(highscore) :
                 #highscore = score
             pygame.draw.rect(gameWindow,red,[food_x,food_y,food_size,food_size])
