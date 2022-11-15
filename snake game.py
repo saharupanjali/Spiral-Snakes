@@ -36,7 +36,7 @@ font = pygame.font.SysFont(None, 28)
 coverfont = pygame.font.SysFont(None, 40)
 scorefont = pygame.font.SysFont(None, 34)
 goldenfont = pygame.font.SysFont(None,36)
-warningfont = pygame.font.SysFont(None,48) 
+warningfont = pygame.font.SysFont(None,28) 
 #Font functions
 def screen_text (text,color,x,y):
     text_style = font.render(text,True,blue)
@@ -487,7 +487,7 @@ def gameloop():
                 obs_x = random.randint(100,window_width/2)
                 obs_y = random.randint(100,window_height/2)
                 snake_length +=2
-                if score>50:
+                if score>500:
                    secondlevel(score)
             gameWindow.blit(field,(0,0))
             screen_text("Score: " + str(score), blue, 50, 10)
