@@ -427,7 +427,7 @@ def gameloop():
     obstacle_size1 = 30
     obstacle_x2 = 0
     obstacle_y2 = 300
-    obstacle_size2 = 20
+    obstacle_size2 = 40
     #body_parts = 3
     food_x = random.randint(30,window_width/2)
     food_y = random.randint(30,window_height/2)
@@ -539,7 +539,7 @@ def gameloop():
                 pygame.mixer.music.play()
                 warning("Oh no! Crashed! Game Over",red,250,200)
                 game_over = True
-            if abs(snake_x - obstacle_x2)<15 and abs(snake_y - obstacle_y2)<15:
+            if abs(snake_x - obstacle_x2)<30 and abs(snake_y - obstacle_y2)<30:
                 pygame.mixer.music.load('collision.wav')
                 pygame.mixer.music.play()
                 warning("Oh no! Crashed! Game Over",red,250,200)
