@@ -436,10 +436,10 @@ def gameloop():
     obs_size = 25
     #food_radius = 4
     fps = 30
-    velocity_x = 5
+    velocity_x = 3
     velocity_y = 0
-    init_velocity = 5
-    init_velocity_1 = 10
+    init_velocity = 3
+    init_velocity_1 = 30
     init_velocity_2 = 20
     food_size = 6
     snake_list = []
